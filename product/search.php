@@ -21,10 +21,10 @@ $keywords=isset($_GET["s"]) ? $_GET["s"] : "";
  
 // query products
 $stmt = $product->search($keywords);
-$num = mysqli_num_rows($stmt);
+
  
 // check if more than 0 record found
-if($num>0){
+if(mysqli_num_rows($stmt)>0){
  
     // products array
     $products_arr=array();

@@ -21,7 +21,7 @@ class Category{
     public function read(){
         //select all data
         $query = "SELECT
-                    id, name, description
+                    id, name, description,created
                 FROM
                     " . $this->table_name . "
                 ORDER BY

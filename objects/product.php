@@ -12,7 +12,7 @@ class Product{
     public $description;
     public $price;
     public $category_id;
-    public $category_name;
+    public $category_name; 
     public $created;
  
     // constructor with $db as database connection
@@ -26,8 +26,7 @@ class Product{
 	function read(){
 	 
 	    // select all query
-	    $query = "SELECT c.name as category_name, p.id, p.name, p.description, p.price, p.category_id, p.created FROM " . $this->table_name . " p LEFT JOIN categories c
-	  ON p.category_id = c.id ORDER BY p.created DESC";
+	    $query = "SELECT * FROM $this->table_name";
 	 
 	    // prepare query statement
 	    $stmt = mysqli_query($this->conn,$query);
@@ -45,16 +44,15 @@ class Product{
 	    $this->price=htmlspecialchars(strip_tags($this->price));
 	    $this->description=htmlspecialchars(strip_tags($this->description));
 	    $this->category_id=htmlspecialchars(strip_tags($this->category_id));
-	    $this->created=htmlspecialchars(strip_tags($this->created));
+	    $this->category_name=htmlspecialchars(strip_tags($this->category_name));
+
 	 
 	    // query to insert record
-	    $query = "INSERT INTO
-	                " . $this->table_name . "
-	            SET
-	                name=".$this->name.", price=".$this->price.", description=".$this->description.", category_id=".$this->category_id.", created=".$this->created."";
+	    $query = "INSERT INTO  $this->table_name (name,price,description,category_id,category_name) VALUES ('$this->name','$this->price','$this->description','$this->category_id','$this->category_name')";
+	                                      
 	 
 	    // prepare query
-	    //$stmt = mysqli_query($this->conn,$query);
+	    // $stmt = mysqli_query($this->conn,$query);
 
 
 	    // execute query
@@ -70,19 +68,8 @@ class Product{
 
   // used when filling up the update product form
 function readOne(){
- 
     // query to read single record
-    $query = "SELECT
-                c.name as category_name, p.id, p.name, p.description, p.price, p.category_id, p.created
-            FROM
-                " . $this->table_name . " p
-                LEFT JOIN
-                    categories c
-                        ON p.category_id = c.id
-            WHERE
-                p.id =".$this->id."
-            LIMIT
-                0,1";
+    $query = "SELECT * FROM $this->table_name";
  
     // prepare query statement
  
@@ -97,7 +84,6 @@ function readOne(){
     $this->description = $row['description'];
     $this->category_id = $row['category_id'];
     $this->category_name = $row['category_name'];
-
    }
 
 
@@ -113,22 +99,12 @@ function readOne(){
 	    $this->id=htmlspecialchars(strip_tags($this->id));
 	 
 	    // update query
-	    $query = "UPDATE
-	                " . $this->table_name . "
-	            SET
-	                name = :name,
-	                price = :price,
-	                description = :description,
-	                category_id = :category_id
-	            WHERE
-	                id =".$this->id."";
+	    $query = "UPDATE $this->table_name SET name = '$this->name', price = '$this->price',description = '$this->description',category_id = '$this->category_id' WHERE id ='$this->id' ";
 	 
 	    // prepare query statement
-	    $stmt = mysqli_query($this->conn,$query);
-	
-	 
+
 	    // execute the query
-	    if($stmt){
+	    if(mysqli_query($this->conn,$query)){
 	        return true;
 	    }
 	 
@@ -138,7 +114,6 @@ function readOne(){
 
 	// delete the product
 	function delete(){
-
 	    // sanitize
 	    $this->id=htmlspecialchars(strip_tags($this->id));
 	 
@@ -164,17 +139,8 @@ function readOne(){
 	   // $keywords = "%{$keywords}%";
 	 
 	    // select all query
-	    $query = "SELECT
-	                c.name as category_name, p.id, p.name, p.description, p.price, p.category_id, p.created
-	            FROM
-	                " . $this->table_name . " p
-	                LEFT JOIN
-	                    categories c
-	                        ON p.category_id = c.id
-	            WHERE
-	                p.name LIKE '%{$keywords}%' OR p.description LIKE '%{$keywords}%' OR c.name LIKE '%{$keywords}%'
-	            ORDER BY
-	                p.created DESC";
+	    $query = "SELECT FROM $this->table_name  WHERE
+		         name LIKE '%{$keywords}%' OR description LIKE '%{$keywords}%' OR category_name LIKE '%{$keywords}%' ";
 	 
 	    // prepare query statement
 	    $stmt = mysqli_query($this->conn,$query);
